@@ -77,6 +77,7 @@ namespace Microsoft.VisualStudio.Services.Agent
                     public static readonly string MachineGroupTags = "machinegrouptags";
                     public static readonly string DeploymentGroupTags = "deploymentgrouptags";
                     public static readonly string Yaml = "yaml";
+                    public static readonly string Yml = "yml";
 
                     // Secret args. Must be added to the "Secrets" getter as well.
                     public static readonly string Password = "password";
@@ -94,8 +95,9 @@ namespace Microsoft.VisualStudio.Services.Agent
                 public static class Commands
                 {
                     public static readonly string Configure = "configure";
+                    public static readonly string LocalRun = "localRun";
+                    public static readonly string Remove = "remove";
                     public static readonly string Run = "run";
-                    public static readonly string Unconfigure = "remove";
                 }
 
                 //if you are adding a new flag, please make sure you update the
