@@ -70,6 +70,19 @@ namespace Microsoft.VisualStudio.Services.Agent.Listener.Configuration
                 throw new InvalidOperationException(StringUtil.Loc("AlreadyConfiguredError"));
             }
 
+            // Populate proxy setting from commandline args
+            var vstsProxy = HostContext.GetService<IVstsAgentWebProxy>();
+            bool saveProxySetting = false;
+            string proxyUrl = command.GetProxyUrl();
+            if (!string.IsNullOrEmpty(proxyUrl))
+            {
+                Trace.Info("Reset proxy base on commandline args.");
+                string proxyUserName = command.GetProxyUserName();
+                string proxyPassword = command.GetProxyPassword();
+                (vstsProxy as VstsAgentWebProxy).SetupProxy(proxyUrl, proxyUserName, proxyPassword);
+                saveProxySetting = true;
+            }
+
             AgentSettings agentSettings = new AgentSettings();
             // TEE EULA
             agentSettings.AcceptTeeEula = false;
@@ -114,8 +127,6 @@ namespace Microsoft.VisualStudio.Services.Agent.Listener.Configuration
                 (extensionManager.GetExtensions<IConfigurationProvider>())
                 .FirstOrDefault(x => x.ConfigurationProviderType == agentType);
             ArgUtil.NotNull(agentProvider, agentType);
-
-            // TODO: Check if its running with elevated permission and stop early if its not
 
             // Loop getting url and creds until you can connect
             ICredentialProvider credProvider = null;
@@ -316,6 +327,13 @@ namespace Microsoft.VisualStudio.Services.Agent.Listener.Configuration
             agentSettings.NotificationSocketAddress = command.GetNotificationSocketAddress();
 
             _store.SaveSettings(agentSettings);
+
+            if (saveProxySetting)
+            {
+                Trace.Info("Save proxy setting to disk.");
+                (vstsProxy as VstsAgentWebProxy).SaveProxySetting();
+            }
+
             _term.WriteLine(StringUtil.Loc("SavedSettings", DateTime.UtcNow));
 
 #if OS_WINDOWS

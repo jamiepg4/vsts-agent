@@ -83,11 +83,15 @@ namespace Microsoft.VisualStudio.Services.Agent
                     public static readonly string Token = "token";
                     public static readonly string WindowsLogonPassword = "windowslogonpassword";
                     public static readonly string StartupType = "startuptype";
+                    public static readonly string ProxyUrl = "proxyurl";
+                    public static readonly string ProxyUserName = "proxyusername";
+                    public static readonly string ProxyPassword = "proxypassword";
                     public static string[] Secrets => new[]
                     {
                         Password,
                         Token,
                         WindowsLogonPassword,
+                        ProxyPassword,
                     };
                 }
 

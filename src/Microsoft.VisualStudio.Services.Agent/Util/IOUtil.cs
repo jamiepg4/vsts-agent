@@ -102,6 +102,11 @@ namespace Microsoft.VisualStudio.Services.Agent.Util
             return Path.Combine(GetRootPath(), ".proxy");
         }
 
+        public static string GetProxyCredentialsFilePath()
+        {
+            return Path.Combine(GetRootPath(), ".proxycredentials");
+        }
+
         public static string GetProxyBypassFilePath()
         {
             return Path.Combine(GetRootPath(), ".proxybypass");

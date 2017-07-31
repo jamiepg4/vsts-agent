@@ -62,7 +62,10 @@ namespace Microsoft.VisualStudio.Services.Agent.Listener
             Constants.Agent.CommandLine.Args.WindowsLogonAccount,
             Constants.Agent.CommandLine.Args.WindowsLogonPassword,
             Constants.Agent.CommandLine.Args.Work,
-            Constants.Agent.CommandLine.Args.Yaml
+            Constants.Agent.CommandLine.Args.Yaml,
+            Constants.Agent.CommandLine.Args.ProxyUrl,
+            Constants.Agent.CommandLine.Args.ProxyUserName,
+            Constants.Agent.CommandLine.Args.ProxyPassword
         };
 
         // Commands.
@@ -362,6 +365,21 @@ namespace Microsoft.VisualStudio.Services.Agent.Listener
         public string GetYaml()
         {
             return GetArg(Constants.Agent.CommandLine.Args.Yaml);
+        }
+
+        public string GetProxyUrl()
+        {
+            return GetArg(Constants.Agent.CommandLine.Args.ProxyUrl);
+        }
+
+        public string GetProxyUserName()
+        {
+            return GetArg(Constants.Agent.CommandLine.Args.ProxyUserName);
+        }
+
+        public string GetProxyPassword()
+        {
+            return GetArg(Constants.Agent.CommandLine.Args.ProxyPassword);
         }
 
         public void SetUnattended()
