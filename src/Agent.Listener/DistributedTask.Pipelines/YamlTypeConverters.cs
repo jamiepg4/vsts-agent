@@ -37,6 +37,11 @@ namespace Microsoft.TeamFoundation.DistributedTask.Orchestration.Server.Pipeline
             while (parser.Allow<SequenceEnd>() == null)
             {
                 parser.Expect<MappingStart>();
+                string type = ReadNonEmptyString(parser);
+                switch (type)
+                {
+                    // TODO: RESUME HERE
+                }
                 ReadExactString(parser, PipelineConstants.Name);
                 var resource = new ProcessResource { Name = ReadNonEmptyString(parser) };
                 while (parser.Allow<MappingEnd>() == null)
@@ -135,6 +140,13 @@ namespace Microsoft.TeamFoundation.DistributedTask.Orchestration.Server.Pipeline
                         //
                         // Phase properties
                         //
+
+                        case PipelineConstants.Variables:
+                            ValidateNull(phase.TimeoutInMinutes, PipelineConstants.TimeoutInMinutes, PipelineConstants.Parallel, scalar);
+                            ValidateNull(phase.Variables, PipelineConstants.Variables, PipelineConstants.Parallel, scalar);
+                            ValidateNull(phase.Steps, PipelineConstants.Steps, PipelineConstants.Parallel, scalar);
+                            phase.Parallel = ReadBoolean(parser);
+                            break;
 
                         case PipelineConstants.Parallel:
                             ValidateNull(phase.TimeoutInMinutes, PipelineConstants.TimeoutInMinutes, PipelineConstants.Parallel, scalar);

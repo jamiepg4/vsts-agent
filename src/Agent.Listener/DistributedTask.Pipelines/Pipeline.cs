@@ -38,7 +38,7 @@ namespace Microsoft.TeamFoundation.DistributedTask.Orchestration.Server.Pipeline
     }
 
     // A process template cannot reference other process templates, but
-    // phases/jobs/steps within can reference templates.
+    // phases/steps within can reference templates.
     public sealed class ProcessTemplate : PhasesTemplate
     {
         public List<ProcessResource> Resources { get; set; }
@@ -52,13 +52,22 @@ namespace Microsoft.TeamFoundation.DistributedTask.Orchestration.Server.Pipeline
     {
     }
 
-    public class Phase : Job, IPhase
+    public class Phase : IPhase
     {
-        public Boolean? Parallel { get; set; }
+        public List<IVariable> Variables { get; set; }
 
         public PhaseTarget Target { get; set; }
 
-        public List<IJob> Jobs { get; set; }
+        public PhaseExecution Execution { get; set; }
+
+        public List<IStep> Steps { get; set; }
+    }
+
+    public class PhaseExecution
+    {
+        public String Name { get; set; }
+
+        public Int32? TimeoutInMinutes { get; set; }
     }
 
     public sealed class PhaseTarget
@@ -68,41 +77,28 @@ namespace Microsoft.TeamFoundation.DistributedTask.Orchestration.Server.Pipeline
         public String Name { get; set; }
     }
 
-    public class PhasesTemplateReference : JobsTemplateReference, IPhase
+    public class PhasesTemplateReference : StepsTemplateReference, IPhase
     {
         public List<PhaseSelector> PhaseSelectors { get; set; }
     }
 
-    public sealed class PhaseSelector : JobSelector
+    public sealed class PhaseSelector
     {
-        public List<JobSelector> JobSelectors { get; set; }
+        public String Name { get; set; }
+
+        public Dictionary<String, List<ISimpleStep>> StepOverrides { get; set; }
     }
 
     // A phase template cannot reference other phase templates, but
-    // jobs/steps within can reference templates.
-    public class PhasesTemplate : JobsTemplate
+    // steps within can reference templates.
+    public class PhasesTemplate : StepsTemplate
     {
         public List<IPhase> Phases { get; set; }
     }
 
     ////////////////////////////////////////
-    // Job classes
+    // Variable classes
     ////////////////////////////////////////
-
-    public interface IJob
-    {
-    }
-
-    public class Job : IJob
-    {
-        public String Name { get; set; }
-
-        public Int32? TimeoutInMinutes { get; set; }
-
-        public List<IVariable> Variables { get; set; }
-
-        public List<IStep> Steps { get; set; }
-    }
 
     public interface IVariable
     {
@@ -115,25 +111,6 @@ namespace Microsoft.TeamFoundation.DistributedTask.Orchestration.Server.Pipeline
         public String Value { get; set; }
 
         public Boolean Verbatim { get; set; }
-    }
-
-    public class JobsTemplateReference : StepsTemplateReference, IJob
-    {
-        public List<JobSelector> JobSelectors { get; set; }
-    }
-
-    public class JobSelector
-    {
-        public String Name { get; set; }
-
-        public Dictionary<String, List<ISimpleStep>> StepOverrides { get; set; }
-    }
-
-    // A job template cannot reference other job templates, but
-    // steps within can reference templates.
-    public class JobsTemplate : StepsTemplate
-    {
-        public List<IJob> Jobs { get; set; }
     }
 
     public sealed class VariablesTemplateReference : IVariable
